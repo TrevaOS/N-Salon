@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>N Salon Chandra Layout | Spin &amp; Win</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════
+   RESET & CSS VARIABLES
+═══════════════════════════════════════════════ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --rose:      #E8547A;
+  --rose-deep: #C2185B;
+  --rose-soft: #F48FB1;
+  --pink-rim:  #FFB6C1;
+  --gold:      #D4A44C;
+  --gold-lt:   #F5D78E;
+  --text:      #3A0C22;
+  --muted:     #9E6070;
+  --card-bg:   rgba(255, 255, 255, 0.92);
+}
+
+/* ═══════════════════════════════════════════════
+   BASE
+═══════════════════════════════════════════════ */
+html, body {
+  height: 100%; width: 100%;
+  overflow: hidden;
+  font-family: 'Nunito', sans-serif;
+  color: var(--text);
+  background: #FDE8F0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ═══════════════════════════════════════════════
+   BACKGROUND PETALS
+═══════════════════════════════════════════════ */
+#petals { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 0; }
+.petal  { position: absolute; opacity: 0; animation: petalFall linear infinite; }
+
+@keyframes petalFall {
+  0%   { transform: translateY(-40px) rotate(0deg);   opacity: 0; }
+  5%   { opacity: .18; }
+  90%  { opacity: .13; }
+  100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+}
+
+/* ═══════════════════════════════════════════════
+   APP SHELL
+═══════════════════════════════════════════════ */
+#app {
+  position: relative;
+  z-index: 1;
+  height: 100dvh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ═══════════════════════════════════════════════
+   CANVAS
+═══════════════════════════════════════════════ */
+canvas {
+  display: block;
+  margin: auto;
+}
+
+/* ═══════════════════════════════════════════════
+   HEADER
+═══════════════════════════════════════════════ */
+#hdr {
+  text-align: center;
+  margin-bottom: 6px;
+}
+.tagline-line {
+  font-size: clamp(.78rem, 2.2vw, 1rem);
+  letter-spacing: 2.5px; text-transform: uppercase;
+  color: var(--rose); font-weight: 600;
+  line-height: 1.5;
+}
+.card-logo-img {
+  height: clamp(54px, 9.5vh, 78px);
+  width: auto;
+  object-fit: contain;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+/* ═══════════════════════════════════════════════
+   SCREENS CONTAINER
+═══════════════════════════════════════════════ */
+#screens {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 0px;
+}
+
+.screen        { display: none; width: 100%; max-width: 460px; }
+.screen.active {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+/* ═══════════════════════════════════════════════
+   CARD
+═══════════════════════════════════════════════ */
+.card {
+  margin: auto;
+  background: transparent;
+  backdrop-filter: none;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  color: #3A0C22;
+}
+.card-with-logo    { padding-top: 18px; }
+.card-wheel-center { text-align: center; padding-top: 10px; }
+
+.card-logo-wrap {
+  display: flex; justify-content: center;
+  margin-bottom: -34px;
+  position: relative; z-index: 2;
+}
+
+/* ═══════════════════════════════════════════════
+   BADGE
+═══════════════════════════════════════════════ */
+.badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: linear-gradient(135deg, #FFE4EE, #FFD0E4);
+  border: 1px solid var(--pink-rim);
+  border-radius: 50px; padding: 3px 11px;
+  font-size: .64rem; font-weight: 600;
+  letter-spacing: 1.6px; text-transform: uppercase;
+  color: var(--rose); margin-bottom: clamp(7px, 1.3vh, 13px);
+}
+
+/* ═══════════════════════════════════════════════
+   FORM SCREEN
+═══════════════════════════════════════════════ */
+.form-title {
+  font-size: clamp(1rem, 3.2vw, 1.45rem);
+  font-weight: 700; color: var(--rose-deep);
+  line-height: 1.2; margin-bottom: 2px;
+}
+.form-sub {
+  font-size: clamp(.8rem, 2.2vw, .92rem); color: var(--muted);
+  margin-bottom: clamp(8px, 1.5vh, 16px); line-height: 1.4;
+}
+.fg { margin-bottom: clamp(7px, 1.3vh, 12px); }
+
+label.fl {
+  display: block; font-size: .64rem; font-weight: 600;
+  letter-spacing: 1.3px; text-transform: uppercase;
+  color: var(--rose); margin-bottom: 4px;
+}
+input[type="text"], input[type="tel"], input[type="email"] {
+  width: 100%;
+  padding: clamp(8px, 1.4vh, 11px) 12px;
+  border: 1.5px solid #F5C6CF; border-radius: 11px;
+  font-family: 'Nunito', sans-serif;
+  font-size: clamp(.82rem, 2.3vw, .9rem);
+  background: rgba(255, 255, 255, .75);
+  transition: border-color .2s, box-shadow .2s;
+  outline: none; color: var(--text);
+}
+input:focus {
+  border-color: var(--rose);
+  box-shadow: 0 0 0 3px rgba(232, 84, 122, .12);
+  background: #fff;
+}
+input::placeholder { color: #C8A0AC; }
+
+/* Gender toggle buttons */
+.gender-row { display: flex; gap: 9px; }
+.gr-opt     { flex: 1; position: relative; }
+.gr-opt input[type="radio"] { position: absolute; opacity: 0; width: 0; height: 0; }
+.gr-opt label.gl {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  padding: clamp(8px, 1.3vh, 11px) 8px;
+  border: 1.5px solid #F5C6CF; border-radius: 11px; cursor: pointer;
+  font-size: clamp(.78rem, 2vw, .86rem); font-weight: 500; color: var(--muted);
+  transition: all .2s; background: rgba(255, 255, 255, .75);
+  user-select: none;
+}
+.gr-opt input:checked + label.gl {
+  border-color: var(--rose);
+  background: linear-gradient(135deg, var(--rose), var(--rose-deep));
+  color: #fff; font-weight: 600;
+  box-shadow: 0 3px 13px rgba(194, 24, 91, .27);
+}
+.g-icon { width: 17px; height: 17px; flex-shrink: 0; }
+.err { font-size: .66rem; color: #CC0000; font-weight: 600; margin-top: 3px; display: none; }
+
+/* Primary CTA button */
+.btn-primary {
+  width: 100%; margin-top: clamp(5px, 1vh, 10px);
+  padding: clamp(10px, 1.6vh, 13px) 18px;
+  background: linear-gradient(135deg, #F06292, var(--rose), var(--rose-deep));
+  color: #fff; border: none; border-radius: 13px;
+  font-family: 'Nunito', sans-serif;
+  font-size: clamp(.86rem, 2.4vw, .96rem); font-weight: 700;
+  letter-spacing: .7px; cursor: pointer;
+  transition: transform .2s, box-shadow .2s;
+  box-shadow: 0 5px 18px rgba(194, 24, 91, .33), 0 2px 0 rgba(255,255,255,.18) inset;
+  position: relative; overflow: hidden;
+}
+.btn-primary::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(to bottom, rgba(255,255,255,.13), transparent);
+  pointer-events: none;
+}
+.btn-primary:hover  { transform: translateY(-2px); box-shadow: 0 8px 26px rgba(194,24,91,.46); }
+.btn-primary:active { transform: translateY(0); }
+
+/* ═══════════════════════════════════════════════
+   WHEEL SCREEN
+═══════════════════════════════════════════════ */
+#wheel-screen { align-items: center; text-align: center; }
+.whl-title {
+  font-size: clamp(1.05rem, 3.5vw, 1.45rem);
+  font-weight: 700; color: var(--rose-deep); margin-bottom: 2px;
+  margin-top: 10px;
+}
+.whl-sub {
+  font-size: clamp(.8rem, 2.2vw, .92rem); color: var(--muted);
+  margin-bottom: clamp(6px, 1.2vh, 10px); line-height: 1.4;
+}
+
+/* Wheel wrap */
+.wheel-wrap {
+  position: relative;
+  display: inline-flex; align-items: center; justify-content: center;
+  margin-bottom: clamp(14px, 2.5vh, 22px);
+}
+.wheel-ring {
+  position: absolute; border-radius: 50%;
+  background: conic-gradient(
+    var(--gold-lt)  0deg  40deg, var(--pink-rim)  40deg  80deg,
+    var(--gold-lt)  80deg 120deg, var(--pink-rim) 120deg 160deg,
+    var(--gold-lt) 160deg 200deg, var(--pink-rim) 200deg 240deg,
+    var(--gold-lt) 240deg 280deg, var(--pink-rim) 280deg 320deg,
+    var(--gold-lt) 320deg 360deg
+  );
+  opacity: .42;
+  /* No animation — prevents layout drift */
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Pointer arrow */
+.wheel-ptr {
+  position: absolute; top: 0; left: 50%;
+  transform: translate(-50%, -42%);
+  pointer-events: none;
+  z-index: 20;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,.28));
+}
+
+canvas#wc {
+  display: block; border-radius: 50%;
+  position: relative; z-index: 10;
+  box-shadow: 0 8px 36px rgba(194,24,91,.2), 0 3px 10px rgba(0,0,0,.08);
+  cursor: default;
+}
+
+#doSpin {
+  position: relative; z-index: 15;
+  padding: clamp(10px,1.6vh,14px) clamp(24px,7vw,44px);
+  background: linear-gradient(135deg, #F06292, var(--rose), var(--rose-deep));
+  color: #fff; border: none; border-radius: 50px;
+  font-family: 'Nunito', sans-serif;
+  font-size: clamp(.84rem,2.4vw,.96rem); font-weight: 700;
+  letter-spacing: 1.4px; text-transform: uppercase;
+  cursor: pointer; transition: all .25s;
+  box-shadow: 0 5px 20px rgba(194,24,91,.4);
+  overflow: hidden;
+}
+#doSpin::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(to bottom, rgba(255,255,255,.16), transparent);
+  pointer-events: none;
+}
+#doSpin:hover    { transform: scale(1.05); box-shadow: 0 8px 30px rgba(194,24,91,.55); }
+#doSpin:disabled { opacity: .5; cursor: not-allowed; transform: none; box-shadow: none; }
+
+/* ═══════════════════════════════════════════════
+   THANK YOU SCREEN
+═══════════════════════════════════════════════ */
+#ty-screen { align-items: center; text-align: center; }
+.ty-icon  { font-size: clamp(2.2rem,7vw,3.6rem); margin-bottom: 6px; }
+.ty-title {
+  font-size: clamp(1.1rem,3.8vw,1.6rem); color: var(--rose-deep); margin-bottom: 5px;
+}
+.ty-divider    { height: 1px; background: linear-gradient(to right, transparent, var(--pink-rim), transparent); margin: clamp(8px,1.3vh,14px) 0; }
+.ty-email-sent { font-size: clamp(.72rem,1.9vw,.82rem); color: var(--rose); font-weight: 600; margin-top: 8px; line-height: 1.5; }
+.ty-offer-box  {
+  background: linear-gradient(135deg, #FFE4EE, #FFDDE8);
+  border-radius: 13px; padding: clamp(10px,1.8vh,16px) 14px;
+  border: 1.5px solid var(--pink-rim); margin-bottom: 10px;
+}
+.ty-offer-lbl  { font-size: .62rem; letter-spacing: 1.8px; text-transform: uppercase; color: var(--muted); margin-bottom: 3px; font-weight: 600; }
+.ty-offer-name { font-size: clamp(.95rem,3.2vw,1.25rem); font-weight: 700; color: var(--rose-deep); line-height: 1.2; }
+.ty-offer-price { font-size: .86rem; color: var(--rose); font-weight: 600; margin-top: 2px; }
+.ty-note        { font-size: clamp(.64rem,1.7vw,.72rem); color: var(--muted); line-height: 1.6; }
+
+/* ═══════════════════════════════════════════════
+   RESULT MODAL
+═══════════════════════════════════════════════ */
+#rmodal {
+  display: none; position: fixed; inset: 0; z-index: 999;
+  background: rgba(58,12,34,.65); backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  align-items: center; justify-content: center; padding: 16px;
+}
+#rmodal.open { display: flex; }
+
+.rbox {
+  background: #fff; border-radius: 22px;
+  padding: clamp(20px,3.5vw,32px) clamp(16px,3.5vw,28px) clamp(16px,3.5vw,24px);
+  max-width: 380px; width: 100%; text-align: center;
+  box-shadow: 0 20px 65px rgba(0,0,0,.25);
+  border: 1.5px solid rgba(255,182,193,.4);
+  animation: popIn .4s cubic-bezier(.175,.885,.32,1.275);
+  position: relative; overflow: hidden;
+  max-height: 92dvh; overflow-y: auto;
+}
+.rbox::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  background: linear-gradient(to right, var(--rose-soft), var(--rose), var(--rose-deep));
+}
+@keyframes popIn {
+  from { transform: scale(.45) translateY(28px); opacity: 0; }
+  to   { transform: scale(1)   translateY(0);    opacity: 1; }
+}
+
+.r-emoji       { font-size: clamp(2.4rem,7vw,3.5rem); display: block; margin-bottom: 7px; animation: sway .9s ease-in-out infinite alternate; }
+@keyframes sway { from { transform: rotate(-8deg) scale(1); } to { transform: rotate(8deg) scale(1.08); } }
+.r-who         { font-size: .78rem; color: var(--muted); margin-bottom: 1px; font-weight: 500; }
+.r-title       { font-size: clamp(1.2rem,3.8vw,1.55rem); color: var(--rose-deep); font-weight: 700; margin-bottom: 12px; }
+.r-offer-box   { background: linear-gradient(135deg,#FFE4EE,#FFD6E8); border-radius: 13px; padding: 13px; border: 1.5px solid var(--pink-rim); margin-bottom: 12px; }
+.r-offer-name  { font-size: clamp(.95rem,3.2vw,1.15rem); font-weight: 700; color: var(--rose-deep); }
+.r-offer-price { font-size: .84rem; color: var(--rose); font-weight: 600; margin-top: 2px; }
+.r-note        { font-size: .72rem; color: var(--muted); line-height: 1.6; margin-bottom: 14px; }
+.btn-claim {
+  width: 100%; padding: 12px;
+  background: linear-gradient(135deg, var(--rose), var(--rose-deep));
+  color: #fff; border: none; border-radius: 13px;
+  font-family: 'Nunito', sans-serif;
+  font-size: .92rem; font-weight: 700; cursor: pointer;
+  transition: all .2s; box-shadow: 0 4px 15px rgba(194,24,91,.3);
+}
+.btn-claim:hover { transform: translateY(-2px); box-shadow: 0 7px 22px rgba(194,24,91,.46); }
+
+.sa-box   { background: linear-gradient(135deg,#FFF0F5,#FFE4EE); border-radius: 13px; padding: 14px; border: 1.5px solid var(--pink-rim); margin-bottom: 12px; }
+.sa-title { font-size: 1.1rem; font-weight: 700; color: var(--rose-deep); margin-bottom: 3px; }
+.sa-sub   { font-size: .8rem; color: var(--muted); }
+.bln-box  { background: linear-gradient(135deg,#F8F8F8,#EFEFEF); border: 1.5px solid #ddd; }
+
+/* Modal close button */
+.modal-close {
+  position: absolute; top: 10px; right: 10px;
+  width: 30px; height: 30px;
+  background: rgba(194,24,91,0.08);
+  border: 1.5px solid rgba(194,24,91,0.25);
+  border-radius: 50%; cursor: pointer;
+  font-size: .85rem; color: var(--rose-deep);
+  display: flex; align-items: center; justify-content: center;
+  transition: all .2s; z-index: 5; flex-shrink: 0;
+}
+.modal-close:hover { background: var(--rose); color: #fff; border-color: var(--rose); }
+
+/* Modal branding */
+.modal-brand {
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+  margin-bottom: 10px; padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255,182,193,.4);
+}
+.modal-brand img { height: 22px; object-fit: contain; }
+.modal-brand-name {
+  font-size: .8rem; font-weight: 700;
+  color: var(--rose-deep); letter-spacing: 2.5px;
+}
+
+/* Email input in modal */
+.modal-email-wrap { margin-bottom: 12px; text-align: left; }
+.modal-email-label {
+  display: block; font-size: .63rem; font-weight: 600;
+  letter-spacing: 1.3px; text-transform: uppercase;
+  color: var(--rose); margin-bottom: 5px;
+}
+.modal-email-input {
+  width: 100%; padding: 10px 12px;
+  border: 1.5px solid #F5C6CF; border-radius: 11px;
+  font-family: 'Nunito', sans-serif; font-size: .9rem;
+  background: rgba(255,255,255,.9); outline: none; color: var(--text);
+  transition: border-color .2s, box-shadow .2s;
+}
+.modal-email-input:focus {
+  border-color: var(--rose);
+  box-shadow: 0 0 0 3px rgba(232,84,122,.12);
+}
+
+/* Offer code display */
+.offer-code-box {
+  background: linear-gradient(135deg,#FFF8E1,#FFF3CD);
+  border: 2px dashed var(--gold); border-radius: 13px;
+  padding: 12px 16px; margin: 10px 0; text-align: center;
+}
+.offer-code-label { font-size: .6rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.offer-code-value {
+  font-family: monospace;
+  font-size: 1.25rem; font-weight: 700;
+  color: var(--rose-deep); letter-spacing: 4px; margin-top: 3px;
+}
+
+/* Home button */
+.btn-home {
+  width: 100%; margin-top: 10px;
+  padding: 11px 18px; background: transparent;
+  color: var(--rose); border: 2px solid var(--rose);
+  border-radius: 13px; font-family: 'Nunito', sans-serif;
+  font-size: .9rem; font-weight: 600;
+  cursor: pointer; transition: all .2s;
+}
+.btn-home:hover { background: var(--rose); color: #fff; }
+
+/* ═══════════════════════════════════════════════
+   CONFETTI PARTICLES
+═══════════════════════════════════════════════ */
+.cp { position: fixed; pointer-events: none; z-index: 1000; border-radius: 2px; animation: cf linear forwards; }
+@keyframes cf {
+  0%   { transform: translateY(-20px) rotate(0deg);   opacity: 1; }
+  100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+}
+</style>
+</head>
+<body>
+
+<div id="petals"></div>
+
+<div id="app">
+
+  <!-- ══ HEADER ══ -->
+  <div id="hdr">
+    <img src="Logo WEB (1).png" alt="N Salon" class="card-logo-img"
+         onerror="this.style.display='none'">
+    <div class="tagline-line">✦ Chandra Layout ✦</div>
+    <div class="tagline-line">✦ Spin &amp; Win ✦</div>
+  </div>
+
+  <!-- ══ SCREENS ══ -->
+  <div id="screens">
+
+    <!-- ── SCREEN 1 : REGISTRATION FORM ── -->
+    <div class="screen active" id="form-screen">
+      <div class="card card-with-logo">
+        <div class="form-title">Lucky Spin</div>
+        <div class="form-sub">Fill in your details &amp; claim your exclusive offer only at <strong><br>N Salon, Chandra Layout</strong> 🎁</div>
+
+        <div class="fg">
+          <label class="fl" for="inp-name">Full Name</label>
+          <input type="text" id="inp-name" placeholder="e.g. Priya Sharma" autocomplete="name">
+          <div class="err" id="err-name">Please enter your full name</div>
+        </div>
+
+        <div class="fg">
+          <label class="fl" for="inp-phone">Mobile Number</label>
+          <input type="tel" id="inp-phone" placeholder="10-digit mobile number" maxlength="10" inputmode="numeric">
+          <div class="err" id="err-phone">Please enter a valid 10-digit number</div>
+        </div>
+
+        <div class="fg">
+          <label class="fl">Gender</label>
+          <div class="gender-row">
+            <div class="gr-opt">
+              <input type="radio" name="gen" id="g-f" value="F">
+              <label class="gl" for="g-f">
+                <svg class="g-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+                  <circle cx="12" cy="8.5" r="5.5"/>
+                  <line x1="12" y1="14" x2="12" y2="21"/>
+                  <line x1="9"  y1="18" x2="15" y2="18"/>
+                </svg>
+                Female
+              </label>
+            </div>
+            <div class="gr-opt">
+              <input type="radio" name="gen" id="g-m" value="M">
+              <label class="gl" for="g-m">
+                <svg class="g-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="10" cy="14" r="5.5"/>
+                  <line x1="14" y1="10" x2="21" y2="3"/>
+                  <polyline points="17,3 21,3 21,7"/>
+                </svg>
+                Male
+              </label>
+            </div>
+          </div>
+          <div class="err" id="err-gen">Please select your gender</div>
+        </div>
+
+        <div class="fg">
+          <label class="fl" for="inp-loc">Locality / Area</label>
+          <input type="text" id="inp-loc" placeholder="e.g. Koramangala, HSR Layout…">
+          <div class="err" id="err-loc">Please enter your locality</div>
+        </div>
+
+        <button class="btn-primary" onclick="goToWheel()">Let's Spin!</button>
+      </div>
+    </div>
+
+    <!-- ── SCREEN 2 : SPIN WHEEL ── -->
+    <div class="screen" id="wheel-screen">
+      <div class="card card-wheel-center">
+        <div class="whl-title">🌟 You're One Spin Away from a Steal!</div>
+        <div class="whl-sub" id="whl-greet"></div>
+
+        <div class="wheel-wrap" id="wwrap">
+          <div class="wheel-ring" id="wring"></div>
+          <svg class="wheel-ptr" id="wptr" viewBox="0 0 28 36" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="14,36 1,2 27,2" fill="#C2185B"/>
+            <circle cx="14" cy="6" r="5.5" fill="#D4A44C" stroke="white" stroke-width="2"/>
+          </svg>
+          <canvas id="wc"></canvas>
+        </div>
+
+        <button id="doSpin" onclick="spinNow()">✨ SPIN ✨</button>
+      </div>
+    </div>
+
+    <!-- ── SCREEN 3 : THANK YOU ── -->
+    <div class="screen" id="ty-screen">
+      <div class="card card-with-logo">
+        <div class="ty-icon" id="ty-emoji">🎁</div>
+        <div class="ty-title" id="ty-title">Thank You!</div>
+        <div class="ty-divider"></div>
+        <div class="ty-offer-box" id="ty-offer-box">
+          <div class="ty-offer-lbl">Your Exclusive Offer</div>
+          <div class="ty-offer-name" id="ty-offer-name">–</div>
+          <div class="ty-offer-price" id="ty-offer-price"></div>
+        </div>
+        <div class="offer-code-box" id="ty-code-box">
+          <div class="offer-code-label">Your Redemption Code</div>
+          <div class="offer-code-value" id="ty-code">–</div>
+        </div>
+        <div class="ty-note" id="ty-note">📱 <strong>Show this screen</strong> at N Salon, Chandra Layout to redeem.</div>
+        <div class="ty-email-sent" id="ty-email-sent"></div>
+        <button type="button" class="btn-home" onclick="goHome()">🏠 Go to Home</button>
+      </div>
+    </div>
+
+  </div><!-- /screens -->
+</div><!-- /app -->
+
+<!-- ══ RESULT MODAL ══ -->
+<div id="rmodal">
+  <div class="rbox" id="rbox"></div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   GOOGLE SHEETS SUBMIT
+═══════════════════════════════════════════════════════════════ */
+function sendToSheet(offer, email, code) {
+  fetch("https://script.google.com/macros/s/AKfycbwK9bz7uWIWyUy7iSG9Q8T4bIoBl9o1PbUhupLcEx7Rt39dznG7cB4nmbgvE3_li2If/exec", {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "text/plain" },
+    body: JSON.stringify({
+      name:     user.name,
+      phone:    user.phone,
+      gender:   user.gender,
+      locality: user.locality,
+      offer:    offer,
+      email:    email || '',
+      code:     code  || ''
+    })
+  }).catch(e => console.warn("Sheets error:", e));
+}
+
+function generateCode() {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let c = 'NS-';
+  for (let i = 0; i < 8; i++) c += chars[Math.floor(Math.random() * chars.length)];
+  return c;
+}
+
+function goHome() { location.reload(); }
+
+/* ═══════════════════════════════════════════════════════════════
+   SEGMENTS
+   female: true/false  — whether females can receive this offer
+   male:   true/false  — whether males   can receive this offer
+
+   INDEX MAP:
+   0 → Hair Spa          (F only)
+   1 → ₹500 Off          (F + M)
+   2 → Wax Package       (F + M)
+   3 → Free Haircut      (F + M)
+   4 → Facial            (F + M)
+   5 → Botox @ ₹3,999   (F only)  ← MALES NEVER GET THIS
+   6 → 40% Off ₹2,000   (F + M)
+   7 → Full Waxing       (F only)
+   8 → Spin Again        (F only)  ← MALES NEVER GET THIS
+═══════════════════════════════════════════════════════════════ */
+const SEGS = [
+  { id:0, line1:'HAIR SPA',        line2:'@ ₹1,100',           emoji:'💆',    desc:'Haircut + Hair Spa',                   price:'₹1,100',                   female:true,  male:false },
+  { id:1, line1:'SPEND ₹1,000',    line2:'& GET ₹500 OFF',     emoji:'💰',    desc:'Spend ₹1,000 & Get ₹500 Off',          price:'On spends above ₹1,000',   female:true,  male:true  },
+  { id:2, line1:'WAX PACKAGE',     line2:'FA+FL+UA @ ₹799',    emoji:'🏷️',   desc:'Wax Package (Full Arms+Full Legs+UA)', price:'₹799',                     female:true,  male:true  },
+  { id:3, line1:'FREE HAIRCUT',    line2:'',                    emoji:'✂️',    desc:'Free Haircut',                         price:'Complimentary!',           female:true,  male:true  },
+  { id:4, line1:'FACIAL',          line2:'@ ₹1,299',            emoji:'✨',    desc:'Cleanup / Facial',                     price:'₹1,299',                   female:true,  male:true  },
+  { id:5, line1:'BOTOX',           line2:'@ ₹3,999',            emoji:'💆‍♀️', desc:'Botox / Keratin / Balayage Colour',   price:'₹3,999',                   female:true,  male:false },
+  { id:6, line1:'SPEND ₹2,000',    line2:'& GET 40% OFF',       emoji:'🎁',    desc:'Spend ₹2,000 & Get 40% Off',          price:'On spends above ₹2,000',   female:true,  male:true  },
+  { id:7, line1:'FULL WAXING',     line2:'@ ₹1,599',            emoji:'🌸',    desc:'Full Arm + Full Leg + Underarm Wax',  price:'₹1,599',                   female:true,  male:false },
+  { id:8, line1:'SPIN AGAIN',      line2:'BONUS',               emoji:'🎡',    desc:'Spin Again',                           price:'',                         female:true,  male:false }
+];
+
+const COLORS = ['#8B0000','#C05000','#0D6B2E','#6A0F4D','#CC2200','#A01040','#2E2E2E','#5B1A8A','#D4930A'];
+
+/* ═══════════════════════════════════════════════════════════════
+   SPIN WEIGHTS  (index = segment id)
+   ─────────────────────────────────────────────────────────────
+   FEMALE first spin  — Spin Again ~30 out of 100
+   [0-HairSpa, 1-500off, 2-WaxPkg, 3-FreeHcut, 4-Facial,
+    5-Botox, 6-40off, 7-FullWax, 8-SpinAgain]
+═══════════════════════════════════════════════════════════════ */
+const W_F        = [10,  9,  9,  8, 10,  9,  5, 10, 30];  // Female   — first spin  (30% Spin Again)
+const W_F_RESPIN = [14, 13, 13, 12, 14, 13,  7, 14,  0];  // Female   — re-spin     (no Spin Again)
+
+/* ─────────────────────────────────────────────────────────────
+   MALE first spin — ONLY segments where male:true
+   Valid ids: 1, 2, 3, 4, 6
+   (0=HairSpa female-only, 5=Botox female-only,
+    7=FullWax female-only, 8=SpinAgain female-only)
+═══════════════════════════════════════════════════════════════ */
+const W_M        = [ 0, 25, 20, 20, 20,  0, 15,  0,  0];  // Male     — first spin
+const W_M_RESPIN = [ 0, 25, 20, 20, 20,  0, 15,  0,  0];  // Male     — re-spin (same, already no Spin Again)
+
+/* ═══════════════════════════════════════════════════════════════
+   APP STATE
+═══════════════════════════════════════════════════════════════ */
+let user             = {};
+let rotation         = 0;
+let spinning         = false;
+let isRespin         = false;
+let currentModalType = '';
+
+const N  = 9;
+const SA = (2 * Math.PI) / N;
+
+/* ═══════════════════════════════════════════════════════════════
+   CANVAS SETUP
+═══════════════════════════════════════════════════════════════ */
+const cv  = document.getElementById('wc');
+const ctx = cv.getContext('2d');
+
+function sizeWheel() {
+  const hdrH = document.getElementById('hdr').offsetHeight;
+  const vh   = window.innerHeight, vw = window.innerWidth;
+  const avail = Math.min(vw - 52, vh - hdrH - 215);
+  const size  = Math.max(160, Math.min(avail, 360));
+  const dpr   = window.devicePixelRatio || 1;
+
+  cv.width = cv.height = Math.round(size * dpr);
+  cv.style.width = cv.style.height = size + 'px';
+
+  const ps   = Math.round(size * 0.092);
+  const ptrH = Math.round(ps * 2.2);
+  const ptr  = document.getElementById('wptr');
+  ptr.style.width  = Math.round(ps * 1.6) + 'px';
+  ptr.style.height = ptrH + 'px';
+
+  const protrude = Math.round(ptrH * 0.42);
+  document.getElementById('wwrap').style.paddingTop = protrude + 'px';
+  ptr.style.top = protrude + 'px';
+
+  const pad  = Math.round(size * 0.04);
+  const ring = document.getElementById('wring');
+  ring.style.width  = ring.style.height = (size + pad * 2) + 'px';
+  ring.style.left   = -pad + 'px';
+  ring.style.top    = (protrude - pad) + 'px';
+
+  drawWheel(rotation);
+}
+
+function hex2rgb(hex, a = 0) {
+  const n = parseInt(hex.slice(1), 16);
+  const r = Math.min(255, (n >> 16) + a);
+  const g = Math.min(255, ((n >> 8) & 0xFF) + a);
+  const b = Math.min(255, (n & 0xFF) + a);
+  return `rgb(${r},${g},${b})`;
+}
+
+function drawWheel(rot) {
+  const W   = cv.width, H = cv.height;
+  const dpr = window.devicePixelRatio || 1;
+  const cx  = W / 2, cy = H / 2;
+  const R   = Math.min(cx, cy) - dpr * 3;
+  const hR  = Math.round(R * 0.14);
+  const tx  = R - Math.round(R * 0.35);
+  const maxTextW = tx - hR - dpr * 8;
+
+  ctx.clearRect(0, 0, W, H);
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate(rot);
+
+  for (let i = 0; i < N; i++) {
+    const a0 = i * SA - Math.PI / 2;
+    const a1 = a0 + SA;
+    const am = a0 + SA / 2;
+
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.arc(0, 0, R, a0, a1);
+    ctx.closePath();
+    const g = ctx.createLinearGradient(
+      Math.cos(am) * R * .1, Math.sin(am) * R * .1,
+      Math.cos(am) * R,      Math.sin(am) * R
+    );
+    g.addColorStop(0, hex2rgb(COLORS[i], 48));
+    g.addColorStop(1, COLORS[i]);
+    ctx.fillStyle = g;
+    ctx.fill();
+
+    ctx.strokeStyle = 'rgba(255,255,255,.88)';
+    ctx.lineWidth   = dpr * 2;
+    ctx.stroke();
+
+    ctx.save();
+    ctx.rotate(am);
+    ctx.shadowColor   = 'rgba(0,0,0,.95)';
+    ctx.shadowBlur    = dpr * 7;
+    ctx.fillStyle     = '#fff';
+    ctx.textBaseline  = 'middle';
+    ctx.textAlign     = 'center';
+
+    let fs      = Math.max(9 * dpr, Math.round(R * 0.085));
+    const minFs = Math.max(8 * dpr, Math.round(R * 0.072));
+    while (fs > minFs) {
+      ctx.font = `bold ${fs}px 'Nunito',sans-serif`;
+      const w1 = ctx.measureText(SEGS[i].line1).width;
+      ctx.font = `bold ${Math.round(fs * 0.88)}px 'Nunito',sans-serif`;
+      const w2 = ctx.measureText(SEGS[i].line2).width;
+      if (Math.max(w1, w2) <= maxTextW) break;
+      fs -= dpr;
+    }
+
+    const fs2 = Math.round(fs * 0.88);
+    ctx.lineJoin = 'round';
+
+    ctx.font = `bold ${fs}px 'Nunito',sans-serif`;
+    ctx.strokeStyle = 'rgba(0,0,0,0.75)';
+    ctx.lineWidth = dpr * 2;
+    ctx.strokeText(SEGS[i].line1, tx, -fs * 0.45);
+    ctx.fillText(SEGS[i].line1,   tx, -fs * 0.45);
+
+    ctx.font = `bold ${fs2}px 'Nunito',sans-serif`;
+    ctx.lineWidth = dpr * 1.5;
+    ctx.strokeText(SEGS[i].line2, tx,  fs * 0.45);
+    ctx.fillText(SEGS[i].line2,   tx,  fs * 0.45);
+
+    ctx.shadowBlur = 0;
+    ctx.restore();
+  }
+
+  /* Gold outer ring + studs */
+  ctx.beginPath();
+  ctx.arc(0, 0, R + dpr * 1.5, 0, 2 * Math.PI);
+  ctx.strokeStyle = 'rgba(212,148,10,0.95)';
+  ctx.lineWidth = dpr * 7;
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.arc(0, 0, R + dpr * 1.5, 0, 2 * Math.PI);
+  ctx.strokeStyle = 'rgba(255,220,80,0.55)';
+  ctx.lineWidth = dpr * 2;
+  ctx.stroke();
+
+  for (let i = 0; i < N; i++) {
+    const sa = i * SA - Math.PI / 2;
+    const sx = Math.cos(sa) * (R - dpr * 3);
+    const sy = Math.sin(sa) * (R - dpr * 3);
+    ctx.beginPath();
+    ctx.arc(sx, sy, dpr * 4.5, 0, 2 * Math.PI);
+    ctx.fillStyle = '#FFD700';
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.7)';
+    ctx.lineWidth = dpr;
+    ctx.stroke();
+  }
+
+  /* Hub */
+  const hg = ctx.createRadialGradient(0, 0, 0, 0, 0, hR);
+  hg.addColorStop(0, '#F48FB1');
+  hg.addColorStop(1, '#C2185B');
+
+  ctx.beginPath();
+  ctx.arc(0, 0, hR, 0, 2 * Math.PI);
+  ctx.fillStyle   = hg;
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(255,255,255,.9)';
+  ctx.lineWidth   = dpr * 2.5;
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.arc(0, 0, hR + dpr * 3, 0, 2 * Math.PI);
+  ctx.strokeStyle = 'rgba(212,164,76,.5)';
+  ctx.lineWidth   = dpr * 1.5;
+  ctx.stroke();
+
+  ctx.fillStyle    = '#fff';
+  ctx.font         = `bold ${Math.round(hR * 0.88)}px serif`;
+  ctx.textAlign    = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('N', 0, dpr);
+
+  ctx.restore();
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   FLOATING PETALS
+═══════════════════════════════════════════════════════════════ */
+(function initPetals() {
+  const icons = ['❀','✿','✦','♡','❁','✾','❋','✧'];
+  const el    = document.getElementById('petals');
+  for (let i = 0; i < 16; i++) {
+    const d = document.createElement('div');
+    d.className  = 'petal';
+    d.textContent = icons[i % icons.length];
+    d.style.cssText =
+      `left:${Math.random() * 100}%;` +
+      `font-size:${0.8 + Math.random()}rem;` +
+      `animation-duration:${10 + Math.random() * 14}s;` +
+      `animation-delay:${Math.random() * 12}s;`;
+    el.appendChild(d);
+  }
+})();
+
+/* ═══════════════════════════════════════════════════════════════
+   SCREEN NAVIGATION
+═══════════════════════════════════════════════════════════════ */
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => {
+    s.classList.toggle('active', s.id === id);
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   FORM VALIDATION
+═══════════════════════════════════════════════════════════════ */
+function goToWheel() {
+  const name   = document.getElementById('inp-name').value.trim();
+  const phone  = document.getElementById('inp-phone').value.trim();
+  const genEl  = document.querySelector('input[name="gen"]:checked');
+  const loc    = document.getElementById('inp-loc').value.trim();
+
+  document.querySelectorAll('.err').forEach(e => e.style.display = 'none');
+
+  let valid = true;
+  if (!name)                         { document.getElementById('err-name').style.display  = 'block'; valid = false; }
+  if (!/^\d{10}$/.test(phone))       { document.getElementById('err-phone').style.display = 'block'; valid = false; }
+  if (!genEl)                        { document.getElementById('err-gen').style.display   = 'block'; valid = false; }
+  if (!loc)                          { document.getElementById('err-loc').style.display   = 'block'; valid = false; }
+  if (!valid) return;
+
+  user = { name, phone, gender: genEl.value, locality: loc };
+  document.getElementById('whl-greet').textContent = `Good luck, ${name}! 🤞`;
+  showScreen('wheel-screen');
+  sizeWheel();
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   WEIGHTED RANDOM — gender-aware, hard-blocked by SEGS flags
+═══════════════════════════════════════════════════════════════ */
+function pickWeights() {
+  if (user.gender === 'F') return isRespin ? [...W_F_RESPIN] : [...W_F];
+  return isRespin ? [...W_M_RESPIN] : [...W_M];
+}
+
+function weightedRandom(weights) {
+  const isMale = user.gender === 'M';
+
+  // Build eligible list — HARD BLOCK: gender flag from SEGS must also allow
+  const eligible = [];
+  for (let i = 0; i < weights.length; i++) {
+    if (weights[i] <= 0) continue;
+    if (isMale && !SEGS[i].male)     continue;   // ← hard block for males
+    if (!isMale && !SEGS[i].female)  continue;   // ← hard block for females (safety)
+    eligible.push({ i, w: weights[i] });
+  }
+
+  if (eligible.length === 0) {
+    // Fallback: give Free Haircut (always valid for both)
+    return 3;
+  }
+
+  const total = eligible.reduce((sum, obj) => sum + obj.w, 0);
+  let r = Math.random() * total;
+  for (const obj of eligible) {
+    r -= obj.w;
+    if (r <= 0) return obj.i;
+  }
+  return eligible[eligible.length - 1].i;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SPIN ANIMATION
+═══════════════════════════════════════════════════════════════ */
+function spinNow() {
+  if (spinning) return;
+  spinning = true;
+  document.getElementById('doSpin').disabled = true;
+
+  const target    = weightedRandom(pickWeights());
+  const targetRad = ((-(target + 0.5) * SA) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI);
+  const curNorm   = ((rotation % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
+  let   delta     = (targetRad - curNorm + 2 * Math.PI) % (2 * Math.PI);
+  if (delta < 0.1) delta += 2 * Math.PI;
+
+  const spins    = (5 + Math.floor(Math.random() * 4)) * 2 * Math.PI;
+  const total    = spins + delta;
+  const startRot = rotation;
+  const DUR      = 6500 + Math.random() * 1200;
+  const ease     = t => 1 - Math.pow(1 - t, 4);
+  const t0       = performance.now();
+
+  (function frame(now) {
+    const p = Math.min((now - t0) / DUR, 1);
+    rotation = startRot + total * ease(p);
+    drawWheel(rotation);
+    if (p < 1) {
+      requestAnimationFrame(frame);
+    } else {
+      rotation = startRot + total;
+      spinning = false;
+      showResult(target);
+    }
+  })(t0);
+}
+
+// Tap centre of wheel to spin
+cv.addEventListener('click', function(e) {
+  const rect = cv.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  const dist = Math.sqrt((x - rect.width/2) ** 2 + (y - rect.height/2) ** 2);
+  if (dist < rect.width * 0.15) spinNow();
+});
+
+/* ═══════════════════════════════════════════════════════════════
+   RESULT HANDLING
+═══════════════════════════════════════════════════════════════ */
+function showResult(idx) {
+  const seg = SEGS[idx];
+  if (seg.id === 8) {   // Spin Again
+    isRespin = true;
+    openModal_spinAgain();
+    return;
+  }
+  openModal_win(seg);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MODALS
+═══════════════════════════════════════════════════════════════ */
+const MODAL_BRAND = `
+  <div class="modal-brand">
+    <img src="Logo WEB (1).png" alt="" onerror="this.style.display='none'">
+    <span class="modal-brand-name">· CHANDRA LAYOUT</span>
+  </div>`;
+
+function openModal_win(seg) {
+  currentModalType = 'win';
+  document.getElementById('rbox').innerHTML = `
+    <button type="button" class="modal-close" onclick="dismissModal()">✕</button>
+    ${MODAL_BRAND}
+    <span class="r-emoji">${seg.emoji}</span>
+    <div class="r-who">Congratulations, ${esc(user.name)}! 🎉</div>
+    <div class="r-title">You've Won!</div>
+    <div class="r-offer-box">
+      <div class="r-offer-name">${esc(seg.desc)}</div>
+      <div class="r-offer-price">${esc(seg.price)}</div>
+    </div>
+    <p class="r-note">📱 Show this screen at <strong>N Salon, Chandra Layout</strong> to redeem.<br>📅 Valid on next visit. T&amp;C apply.</p>
+    <button type="button" class="btn-claim" onclick="claimOffer(${seg.id})">🎁 Claim My Offer!</button>`;
+  openModal();
+  launchConfetti();
+}
+
+function openModal_spinAgain() {
+  currentModalType = 'spin_again';
+  document.getElementById('rbox').innerHTML = `
+    <button type="button" class="modal-close" onclick="dismissModal()">✕</button>
+    ${MODAL_BRAND}
+    <span class="r-emoji">🎡</span>
+    <div class="r-who">Hey ${esc(user.name)},</div>
+    <div class="r-title">Lucky You!</div>
+    <div class="sa-box">
+      <div class="sa-title">Bonus Spin! 🎉</div>
+      <div class="sa-sub">Fortune favours the bold — spin again!</div>
+    </div>
+    <p class="r-note">This bonus spin is on us. Go for it!</p>
+    <button type="button" class="btn-claim" onclick="doRespin()">🎰 Spin Again!</button>`;
+  openModal();
+}
+
+function openModal()  { document.getElementById('rmodal').classList.add('open');    }
+function closeModal() { document.getElementById('rmodal').classList.remove('open'); }
+
+function dismissModal() {
+  closeModal();
+  if (currentModalType === 'spin_again') {
+    document.getElementById('doSpin').disabled = false;
+  }
+}
+
+function doRespin() {
+  closeModal();
+  setTimeout(() => {
+    document.getElementById('doSpin').disabled = false;
+    spinNow();
+  }, 380);
+}
+
+function claimOffer(id) {
+  const seg = SEGS[id];
+  document.getElementById('rbox').innerHTML = `
+    <button type="button" class="modal-close" onclick="dismissModal()">✕</button>
+    ${MODAL_BRAND}
+    <span class="r-emoji">📧</span>
+    <div class="r-title">One Last Step!</div>
+    <div class="r-offer-box">
+      <div class="r-offer-name">${esc(seg.desc)}</div>
+      <div class="r-offer-price">${esc(seg.price)}</div>
+    </div>
+    <div class="modal-email-wrap">
+      <label class="modal-email-label" for="modal-email">Your Email Address</label>
+      <input type="email" id="modal-email" class="modal-email-input" placeholder="you@example.com" autocomplete="email">
+      <div class="err" id="err-modal-email">Please enter a valid email address</div>
+    </div>
+    <p class="r-note">📬 We'll send your offer details &amp; unique code to this email.</p>
+    <button type="button" class="btn-claim" onclick="finalizeOffer(${id})">CLAIM MY OFFER 🎁</button>`;
+}
+
+function finalizeOffer(id) {
+  const emailEl = document.getElementById('modal-email');
+  const errEl   = document.getElementById('err-modal-email');
+  const email   = emailEl ? emailEl.value.trim() : '';
+
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (errEl) errEl.style.display = 'block';
+    return;
+  }
+
+  user.email = email;
+  const code = generateCode();
+  const seg  = SEGS[id];
+  sendToSheet(seg.desc, email, code);
+  closeModal();
+
+  const expiry    = new Date(Date.now() + 60 * 24 * 60 * 60 * 1000);
+  const expiryStr = expiry.toLocaleDateString('en-IN', { day:'numeric', month:'long', year:'numeric' });
+
+  document.getElementById('ty-emoji').textContent       = seg.emoji;
+  document.getElementById('ty-title').textContent       = `Offer Claimed, ${esc(user.name)}! 🎉`;
+  document.getElementById('ty-offer-name').textContent  = seg.desc;
+  document.getElementById('ty-offer-price').textContent = seg.price;
+  document.getElementById('ty-offer-box').style.display = '';
+  document.getElementById('ty-code').textContent        = code;
+  document.getElementById('ty-code-box').style.display  = '';
+  document.getElementById('ty-note').textContent        = `📱 Show this screen at N Salon, Chandra Layout to redeem. Valid till ${expiryStr}.`;
+  document.getElementById('ty-email-sent').textContent  = `✉️ Your offer details have been sent to ${email}`;
+  showScreen('ty-screen');
+  launchConfetti();
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CONFETTI BURST
+═══════════════════════════════════════════════════════════════ */
+function launchConfetti() {
+  const colors = ['#FF6B9D','#FFB347','#C678DD','#4FC3F7','#FFD700','#4DB6AC','#F06292'];
+  for (let i = 0; i < 60; i++) {
+    setTimeout(() => {
+      const d = document.createElement('div');
+      d.className = 'cp';
+      const s = 5 + Math.random() * 8;
+      d.style.cssText =
+        `left:${Math.random() * 100}vw;top:-10px;` +
+        `width:${s}px;height:${s * (0.4 + Math.random() * 0.8)}px;` +
+        `background:${colors[~~(Math.random() * colors.length)]};` +
+        `animation-duration:${2 + Math.random() * 2.5}s;` +
+        `animation-delay:${Math.random() * 0.35}s;`;
+      document.body.appendChild(d);
+      setTimeout(() => d.remove(), 5500);
+    }, i * 28);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   UTILITIES
+═══════════════════════════════════════════════════════════════ */
+function esc(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+window.addEventListener('resize', () => {
+  if (document.getElementById('wheel-screen').classList.contains('active')) {
+    sizeWheel();
+  }
+});
+</script>
+</body>
+</html>
